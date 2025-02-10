@@ -24,6 +24,20 @@ INTERVAL = 1.0 / FREQUENCY_HZ
 def float_to_bytes(value):
     return bytearray(str(value), "utf-8")
 
+serial = serial.Serial(COM="COM3", baudrate=9600, timeout=1)    # bei Linux COM=´/dev/ttyACM0´ 
+
+def potiRead(MAX):  
+    if serial is None:  
+        print("⚠️ No serial connection available!")
+        return 1  
+    try:
+        poti_value = serial.readline().decode('utf-8').strip()
+        factor = int(poti_value)/MAX
+        return factor
+    except Exception as e:
+        print("Error: ", e)
+        return 1
+
 
 # Initialize UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -32,7 +46,7 @@ try:
     with open(FILE_PATH, "r") as file:
         for line in file:
             try:
-                value = float(line.strip()) 
+                value = float(line.strip()) * potiRead(MAX=682)   # bei mir war 682 maximaler Wert vom Poti
                 data = float_to_bytes(value)
                 packet = bytearray([0]) + data  # Prepend data type byte
                 sock.sendto(packet, (UDP_ADDR, UDP_PORT))

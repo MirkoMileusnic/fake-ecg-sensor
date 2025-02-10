@@ -1,0 +1,2 @@
+Raspberry hat kein ADC, das heißt, er kann die Werte vom Poti nicht ganz genau selber ablesen, daher benötigen wir entweder ein ADC Modul, aber da ich keins habe, habe ich 
+Arduino verwendet. Es gibt auch Option, PWM GPIOs zu nehmen und damit abzulesen, was ich auch machen werde.
